@@ -81,3 +81,9 @@
   from { text-shadow: 0 0 10px #FFD700; }
   to { text-shadow: 0 0 20px #FFD700, 0 0 30px #FFD700; }
 }
+/* Glow Dice Icon */
+.fa-dice {
+  color: #FFD700;
+  text-shadow: 0 0 15px #FFD700;
+  margin-right: 5px;
+}
