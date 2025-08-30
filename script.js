@@ -1,6 +1,5 @@
 var players = []; // store players
-// Unicode dice symbols
-var diceSymbols = ["⚀","⚁","⚂","⚃","⚄","⚅"];
+var diceSymbols = ["⚀","⚁","⚂","⚃","⚄","⚅"]; // Unicode dice
 
 function makePlayerInputs() {
   var count = document.getElementById("playersCount").value;
@@ -42,44 +41,74 @@ function rollDice() {
   var maxRoll = 0;
   var winners = [];
 
-  for (var i = 0; i < players.length; i++) {
-    var roll = Math.floor(Math.random() * 6) + 1;
+  players.forEach((player, i) => {
+    let roll = Math.floor(Math.random() * 6) + 1;
+    player.dice = roll;
+
+    let diceDiv = document.getElementById("dice" + i);
+    diceDiv.classList.add("shake");
+    diceDiv.textContent = "🎲"; // temporary while shaking
+
+    setTimeout(() => {
+      diceDiv.textContent = diceSymbols[roll - 1]; // show rolled value
+      diceDiv.classList.remove("shake");
+
+      if (roll > maxRoll) {
+        maxRoll = roll;
+        winners = [i];
+      } else if (roll === maxRoll) {
+        winners.push(i);
+      }
+
+      // ✅ after last dice update → decide winner
+      if (i === players.length - 1) {
+        setTimeout(() => {
+          players.forEach((_, k) => {
+            document.getElementById("player" + k).classList.remove("winner");
+          });
+
+          if (winners.length === 1) {
+            document.getElementById("result").innerHTML =
+              "🏆 " + players[winners[0]].name + " Wins!";
+            document.getElementById("player" + winners[0]).classList.add("winner");
+          } else {
+            document.getElementById("result").innerHTML = "🤝 It's a Draw!";
+            winners.forEach(w => {
+              document.getElementById("player" + w).classList.add("winner");
+            });
+          }
+        }, 200);
+      }
+    }, 500);
+  });
+}
+
+    // 🎲 roll current player's dice
+    let roll = Math.floor(Math.random() * 6) + 1;
     players[i].dice = roll;
 
-    var diceDiv = document.getElementById("dice" + i);
+    let diceDiv = document.getElementById("dice" + i);
     diceDiv.classList.add("shake");
+    diceDiv.textContent = "🎲"; // temporary symbol while shaking
 
-    (function(index, value) {
-      setTimeout(function() {
-        diceDiv.textContent = diceSymbols[value - 1];
-        diceDiv.classList.remove("shake");
-      }, 500);
-    })(i, roll);
+    setTimeout(() => {
+      diceDiv.textContent = diceSymbols[roll - 1]; // show rolled value
+      diceDiv.classList.remove("shake");
 
-    if (roll > maxRoll) {
-      maxRoll = roll;
-      winners = [i];
-    } else if (roll === maxRoll) {
-      winners.push(i);
-    }
-  }
-
-  setTimeout(function() {
-    for (var k = 0; k < players.length; k++) {
-      document.getElementById("player" + k).classList.remove("winner");
-    }
-
-    if (winners.length === 1) {
-      document.getElementById("result").innerHTML = "🏆 " + players[winners[0]].name + " Wins!";
-      document.getElementById("player" + winners[0]).classList.add("winner");
-    } else {
-      document.getElementById("result").innerHTML = "🤝 It's a Draw!";
-      for (var w = 0; w < winners.length; w++) {
-        document.getElementById("player" + winners[w]).classList.add("winner");
+      if (roll > maxRoll) {
+        maxRoll = roll;
+        winners = [i];
+      } else if (roll === maxRoll) {
+        winners.push(i);
       }
-    }
-  }, 600);
-}
+
+      i++;
+      setTimeout(rollNext, 600); // roll next player after delay
+    }, 700);
+  
+
+  rollNext(); // start first roll
+
 
 function restartGame() {
   document.getElementById("gameSection").style.display = "none";
