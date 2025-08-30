@@ -1,0 +1,83 @@
+/* General Body */
+.dice-body {
+  background: #000;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Title */
+.game-title {
+  color: #FFD700;
+  text-shadow: 0 0 15px #FFD700;
+  animation: glow 2s infinite alternate;
+}
+
+/* Button */
+.btn-auth {
+  background: #FFD700;
+  color: #000;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 25px;
+  border: none;
+  transition: all 0.3s;
+}
+.btn-auth:hover {
+  background: #000;
+  color: #FFD700;
+  box-shadow: 0 0 20px #FFD700;
+}
+
+/* Player Box */
+.player-box {
+  background: #1a1a1a;
+  border: 2px solid #FFD700;
+  border-radius: 15px;
+  padding: 15px;
+  margin: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.player-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #FFD700;
+}
+
+/* Dice Image */
+.dice-img {
+  width: 80px;
+  transition: transform 0.3s;
+}
+
+/* Dice Shake Animation */
+.shake {
+  animation: shake 0.5s;
+}
+@keyframes shake {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(-15deg); }
+  75% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Winner Highlight */
+.winner {
+  border: 3px solid lime;
+  box-shadow: 0 0 25px lime;
+  transform: scale(1.1);
+}
+
+/* Fade in Transition */
+.fade-in {
+  animation: fadeIn 0.8s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Glow Effect */
+@keyframes glow {
+  from { text-shadow: 0 0 10px #FFD700; }
+  to { text-shadow: 0 0 20px #FFD700, 0 0 30px #FFD700; }
+}
