@@ -1,4 +1,6 @@
 var players = []; // store players
+// Unicode dice symbols
+var diceSymbols = ["⚀","⚁","⚂","⚃","⚄","⚅"];
 
 function makePlayerInputs() {
   var count = document.getElementById("playersCount").value;
@@ -30,7 +32,7 @@ function startGame() {
     board.innerHTML +=
       '<div class="col-md-3 player-box text-center" id="player' + j + '">' +
       "<h4>" + players[j].name + "</h4>" +
-      '<img src="dice1.png" class="dice-img" id="dice' + j + '">' +
+      '<div class="dice-symbol" id="dice' + j + '">⚀</div>' +
       "</div>";
   }
 }
@@ -44,13 +46,13 @@ function rollDice() {
     var roll = Math.floor(Math.random() * 6) + 1;
     players[i].dice = roll;
 
-    var diceImg = document.getElementById("dice" + i);
-    diceImg.classList.add("shake");
+    var diceDiv = document.getElementById("dice" + i);
+    diceDiv.classList.add("shake");
 
     (function(index, value) {
       setTimeout(function() {
-        diceImg.src = "dice" + value + ".png";
-        diceImg.classList.remove("shake");
+        diceDiv.textContent = diceSymbols[value - 1];
+        diceDiv.classList.remove("shake");
       }, 500);
     })(i, roll);
 
