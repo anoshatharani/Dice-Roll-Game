@@ -84,4 +84,9 @@ function restartGame() {
   document.getElementById("setupSection").style.display = "block";
   document.getElementById("playerInputs").innerHTML = "";
   document.getElementById("playersCount").value = "";
+  document.getElementById("result").innerHTML = "Click Roll to Start!";
+}
+
+function backToHome() {
+  restartGame();
 }
