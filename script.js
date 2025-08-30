@@ -1,68 +1,58 @@
-// function add() {
-//     var box = document.getElementById('dicebox')
-// box.innerHTML
-// }
-let players = [];
+var players = []; // store players
 
-function generateFields() {
-  let count = document.getElementById("players").value;
-  let container = document.getElementById("playerNames");
+function makePlayerInputs() {
+  var count = document.getElementById("playersCount").value;
+  var container = document.getElementById("playerInputs");
   container.innerHTML = "";
-  for (let i = 1; i <= count; i++) {
-    container.innerHTML += `
-      <input type="text" id="name${i}" placeholder="Player ${i} Name" 
-      class="form-control w-50 mx-auto mt-2" required>`;
+  for (var i = 1; i <= count; i++) {
+    container.innerHTML +=
+      '<input type="text" id="p' + i + '" placeholder="Player ' + i + ' Name" class="form-control w-50 mx-auto mt-2">';
   }
 }
 
 function startGame() {
-  let count = document.getElementById("players").value;
+  var count = document.getElementById("playersCount").value;
   players = [];
-
-  for (let i = 1; i <= count; i++) {
-    let name = document.getElementById("name" + i).value || "Player " + i;
+  for (var i = 1; i <= count; i++) {
+    var name = document.getElementById("p" + i).value;
+    if (name === "") {
+      name = "Player " + i;
+    }
     players.push({ name: name, dice: 1 });
   }
 
-  // Hide setup, show game
   document.getElementById("setupSection").style.display = "none";
   document.getElementById("gameSection").style.display = "block";
 
-  // Build board
-  const gameBoard = document.getElementById("gameBoard");
-  gameBoard.innerHTML = "";
-  players.forEach((p, index) => {
-    let div = document.createElement("div");
-    div.className = "col-md-2 player-box text-center";
-    div.id = "player" + index;
-    div.innerHTML = `
-      <h4>${p.name}</h4>
-      <img src="dice1.png" class="dice-img" id="dice${index}">
-    `;
-    gameBoard.appendChild(div);
-  });
+  var board = document.getElementById("board");
+  board.innerHTML = "";
+  for (var j = 0; j < players.length; j++) {
+    board.innerHTML +=
+      '<div class="col-md-3 player-box text-center" id="player' + j + '">' +
+      "<h4>" + players[j].name + "</h4>" +
+      '<img src="dice1.png" class="dice-img" id="dice' + j + '">' +
+      "</div>";
+  }
 }
 
-function rollAllDice() {
-  let sound = document.getElementById("diceSound");
-  sound.currentTime = 0;
-  sound.play();
+function rollDice() {
+  document.getElementById("diceSound").play(); // play sound
+  var maxRoll = 0;
+  var winners = [];
 
-  removeHighlights();
-  let maxRoll = 0;
-  let winners = [];
+  for (var i = 0; i < players.length; i++) {
+    var roll = Math.floor(Math.random() * 6) + 1;
+    players[i].dice = roll;
 
-  players.forEach((p, i) => {
-    let roll = Math.floor(Math.random() * 6) + 1;
-    p.dice = roll;
-
-    let diceImg = document.getElementById("dice" + i);
+    var diceImg = document.getElementById("dice" + i);
     diceImg.classList.add("shake");
 
-    setTimeout(() => {
-      diceImg.src = "dice" + roll + ".png";
-      diceImg.classList.remove("shake");
-    }, 500);
+    (function(index, value) {
+      setTimeout(function() {
+        diceImg.src = "dice" + value + ".png";
+        diceImg.classList.remove("shake");
+      }, 500);
+    })(i, roll);
 
     if (roll > maxRoll) {
       maxRoll = roll;
@@ -70,29 +60,28 @@ function rollAllDice() {
     } else if (roll === maxRoll) {
       winners.push(i);
     }
-  });
+  }
 
-  setTimeout(() => {
+  setTimeout(function() {
+    for (var k = 0; k < players.length; k++) {
+      document.getElementById("player" + k).classList.remove("winner");
+    }
+
     if (winners.length === 1) {
-      document.getElementById("result").innerHTML = `🏆 ${players[winners[0]].name} Wins!`;
+      document.getElementById("result").innerHTML = "🏆 " + players[winners[0]].name + " Wins!";
       document.getElementById("player" + winners[0]).classList.add("winner");
     } else {
       document.getElementById("result").innerHTML = "🤝 It's a Draw!";
-      winners.forEach(i => document.getElementById("player" + i).classList.add("winner"));
+      for (var w = 0; w < winners.length; w++) {
+        document.getElementById("player" + winners[w]).classList.add("winner");
+      }
     }
   }, 600);
 }
 
-function removeHighlights() {
-  players.forEach((p, i) => {
-    document.getElementById("player" + i).classList.remove("winner");
-  });
-}
-
-function showSetup() {
+function restartGame() {
   document.getElementById("gameSection").style.display = "none";
   document.getElementById("setupSection").style.display = "block";
-  document.getElementById("playerNames").innerHTML = "";
-  document.getElementById("players").value = "";
-  document.getElementById("result").innerHTML = "Click Roll to Start!";
+  document.getElementById("playerInputs").innerHTML = "";
+  document.getElementById("playersCount").value = "";
 }
